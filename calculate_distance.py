@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from sensor_msgs.msg import NavSatFix
@@ -37,14 +37,17 @@ rospy.init_node('distance_calculation_node')
 #rospy.init_node('gps_subscriber_node')
 
 # Subscribe to the GPS topics of both drones
-rospy.Subscriber('/mavros1/global_position/global', NavSatFix, drone1_gps_callback)
-rospy.Subscriber('/mavros2/global_position/global', NavSatFix, drone2_gps_callback)
+rospy.Subscriber('drone1/mavros/global_position/global', NavSatFix, drone1_gps_callback)
+rospy.Subscriber('drone2/mavros/global_position/global', NavSatFix, drone2_gps_callback)
 
 # Main loop
 while not rospy.is_shutdown():
     # Calculate distance between the two drones using the received GPS coordinates
     distance = calculate_distance(drone1_latitude, drone1_longitude, drone2_latitude, drone2_longitude)
 
+    # Display the coordinates of the drones
+    rospy.loginfo("Position drone 1: (" + str(drone1_latitude) + "," + str(drone1_longitude) + ")\n")
+    rospy.loginfo("Position drone 2: (" + str(drone2_latitude) + "," + str(drone2_longitude) + ")\n")
     # Display or publish the distance as needed
     rospy.loginfo("Distance between drones: %.2f cm" % distance)
 
